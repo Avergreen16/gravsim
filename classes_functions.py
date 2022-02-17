@@ -6,7 +6,7 @@ G = 100#6.675 * 10**-11
 class gravobject:
     counter = 0
 
-    def __init__(self, mass, rval, starting_coordinates, starting_vel, color, r_or_d = "radius"):
+    def __init__(self, mass, rval, starting_coordinates, starting_vel, color, r_or_d = "radius", stabilized = False):
         self.mass = mass
         if r_or_d == "radius":
             self.radius = rval
@@ -17,10 +17,11 @@ class gravobject:
         self.color = color
         self.acceleration = np.array([0.0, 0.0])
         self.id = gravobject.counter
+        self.stabilized = stabilized
         gravobject.counter += 1
     
-    def render(self, window, scale):
-        pygame.draw.circle(window, self.color, (self.coordinates[0] * scale, self.coordinates[1] * scale), self.radius * scale)
+    def render(self, window, scale, view_offset):
+        pygame.draw.circle(window, self.color, (self.coordinates[0] * scale - view_offset[0] * scale  + window.get_width() / 2, self.coordinates[1] * scale - view_offset[1] * scale + window.get_height() / 2), self.radius * scale)
 
 # F = ma
 # a = F/m
@@ -43,6 +44,7 @@ def gravinteract(object_list):
 
 def apply_acceleration(object_list, delta):
     for object in object_list:
-        object.velocity += object.acceleration
-        object.coordinates += object.velocity * (delta / 16.7)
-        object.acceleration = np.array([0.0, 0.0])
+        if object.stabilized == False:
+            object.velocity += object.acceleration
+            object.coordinates += object.velocity * (delta / 16.7)
+            object.acceleration = np.array([0.0, 0.0])
