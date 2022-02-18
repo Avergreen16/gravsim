@@ -21,7 +21,10 @@ class gravobject:
         gravobject.counter += 1
     
     def render(self, window, scale, view_offset):
-        pygame.draw.circle(window, self.color, (self.coordinates[0] * scale - view_offset[0] * scale  + window.get_width() / 2, self.coordinates[1] * scale - view_offset[1] * scale + window.get_height() / 2), self.radius * scale)
+        if self.radius * scale < 1:
+            pygame.draw.line(window, self.color, ((self.coordinates[0] - view_offset[0]) * scale + window.get_width() / 2 - 8, (self.coordinates[1] - view_offset[1]) * scale + window.get_height() / 2 - 8), ((self.coordinates[0] - view_offset[0]) * scale + window.get_width() / 2 + 8, (self.coordinates[1] - view_offset[1]) * scale + window.get_height() / 2 + 8))
+            pygame.draw.line(window, self.color, ((self.coordinates[0] - view_offset[0]) * scale + window.get_width() / 2 + 8, (self.coordinates[1] - view_offset[1]) * scale + window.get_height() / 2 - 8), ((self.coordinates[0] - view_offset[0]) * scale + window.get_width() / 2 - 8, (self.coordinates[1] - view_offset[1]) * scale + window.get_height() / 2 + 8))
+        pygame.draw.circle(window, self.color, ((self.coordinates[0] - view_offset[0]) * scale + window.get_width() / 2, (self.coordinates[1] - view_offset[1]) * scale + window.get_height() / 2), self.radius * scale)
 
 # F = ma
 # a = F/m
