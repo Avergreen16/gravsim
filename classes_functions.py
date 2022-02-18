@@ -1,17 +1,17 @@
 import pygame
 import numpy as np
 
-G = 100#6.675 * 10**-11
+G = 1#6.675 * 10**-11
 
 class gravobject:
     counter = 0
 
-    def __init__(self, mass, rval, starting_coordinates, starting_vel, color, r_or_d = "radius", stabilized = False):
+    def __init__(self, mass, rval, starting_coordinates, starting_vel, color, r_or_d="radius", stabilized = False):
         self.mass = mass
         if r_or_d == "radius":
             self.radius = rval
         elif r_or_d == "density":
-            self.radius = np.cbrt((3*mass)/(4*np.pi*rval))
+            self.radius = np.cbrt((3*mass*5.97237*10**24)/(4*np.pi*(rval * 1000))) / 6371000
         self.velocity = np.array([float(starting_vel[0]), float(starting_vel[1])])
         self.coordinates = np.array([float(starting_coordinates[0]), float(starting_coordinates[1])])
         self.color = color
@@ -42,9 +42,9 @@ def gravinteract(object_list):
                 #np.sqrt(object1.acceleration[1]**2 + object1.acceleration[1]**2))
                 archive.append((object1.id, object2.id))
 
-def apply_acceleration(object_list, delta):
+def apply_acceleration(object_list, delta, framerate=60):
     for object in object_list:
         if object.stabilized == False:
             object.velocity += object.acceleration
-            object.coordinates += object.velocity * (delta / 16.7)
+            object.coordinates += object.velocity * (delta / (1000 / framerate))
             object.acceleration = np.array([0.0, 0.0])

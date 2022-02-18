@@ -12,19 +12,42 @@ Colors = {
     "light_grey" : (200, 200, 200),
     "orange" : (255, 100, 0),
     "blue" : (25, 25, 255),
-    "green" : (25, 255, 25)
+    "green" : (25, 255, 25),
+    "red" : (255, 25, 25),
+    "dark_grey" : (100, 100, 100),
+    "light_blue" : (125, 125, 200),
+    "purple" : (175, 25, 100),
+    "white" : (255, 255, 255),
+    "hot_grey" : (250, 210, 180)
 }
 
 Scale = 2
-view_offset = np.array([0, 0])
+Framerate = 60
+view_offset = np.array([0.0, 0.0])
+rfactor = 5
 
-objects = []
-objects += [Gravsim_cf.gravobject(0.01, 10, [0, 1000], [1, 0], Colors['green']), Gravsim_cf.gravobject(0.1, 15, [0, 450], [1, 0], Colors['light_grey']), Gravsim_cf.gravobject(12, 40, [0, 0], [0, 0], Colors['orange'], stabilized=True)]
+def orb_vel(parent_mass, orbital_radius):
+    return np.sqrt(Gravsim_cf.G * parent_mass / orbital_radius)
 
-def gravloop(delta):
+def add_sattelite(parent, mass, rval, color, orbital_radius, r_or_d="radius"):
+    objects.append(Gravsim_cf.gravobject(mass, rval, [parent.coordinates[0], parent.coordinates[1] - orbital_radius], [parent.velocity[0] + orb_vel(parent.mass, orbital_radius), parent.velocity[1]], color, r_or_d = r_or_d))
+
+objects = [Gravsim_cf.gravobject(29632.94, 13.19*rfactor, [0, 0], [0, 0], Colors["red"], stabilized=True)]
+
+add_sattelite(objects[0], 1.02, 1.13*rfactor, Colors["hot_grey"], 270.03)
+add_sattelite(objects[0], 1.16, 1.10*rfactor, Colors["light_grey"], 370.06)
+add_sattelite(objects[0], 0.30, 0.79*rfactor, Colors["light_grey"], 521.04)
+add_sattelite(objects[0], 0.77, 0.92*rfactor, Colors["blue"], 684.71)
+add_sattelite(objects[0], 0.93, 1.05*rfactor, Colors["light_blue"], 900.73)
+add_sattelite(objects[0], 1.15, 1.15*rfactor, Colors["light_blue"], 1096.57)
+add_sattelite(objects[0], 0.33, 0.78*rfactor, Colors["light_blue"], 1448.78)
+
+
+
+def gravloop(delta, framerate=60):
     Gravsim_cf.gravinteract(objects)
 
-    Gravsim_cf.apply_acceleration(objects, delta)
+    Gravsim_cf.apply_acceleration(objects, delta, framerate=framerate)
 
     for object in objects:
         object.render(Window, Scale, view_offset)
@@ -34,11 +57,13 @@ def main():
     global view_offset
     clock = pygame.time.Clock()
     run = True
-    highest_vel = 0
+    mouse_left_trigger = False
+    offset = np.array([pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]])
 
     while run:
-        delta = clock.tick(60)
+        delta = clock.tick(Framerate)
         mouse_pos = pygame.mouse.get_pos()
+        mouse_pressed = pygame.mouse.get_pressed()
 
         Window.fill((0, 0, 0))
 
@@ -46,18 +71,28 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             
-            if event.type == pygame.MOUSEWHEEL:
+            elif event.type == pygame.MOUSEWHEEL:
                 if event.y == 1:
                     Scale *= 1.15
 
                 elif event.y == -1:
                     Scale /= 1.15
+            
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_left_trigger = True
+                offset = np.array([mouse_pos[0], mouse_pos[1]])
+            
+            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:\
+                mouse_left_trigger = False
         
-        if highest_vel < objects[1].velocity[1]:
-            highest_vel = objects[1].velocity[1]
-            print(highest_vel)
+        if mouse_pressed[0] and mouse_left_trigger == True:
+            view_offset += np.array([(offset[0] - mouse_pos[0]) / Scale, (offset[1] - mouse_pos[1]) / Scale])
+            offset = np.array([mouse_pos[0], mouse_pos[1]])
+        
+        #else:
+        #    view_offset = objects[1].coordinates.copy()
 
-        gravloop(delta)
+        gravloop(delta, framerate=Framerate)
         pygame.display.update()
         
     pygame.quit()
