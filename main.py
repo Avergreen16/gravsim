@@ -2,14 +2,17 @@ import pygame
 import numpy as np
 
 import classes_functions as Gravsim_cf
+from classes_functions import orb_vel
 
 Width = 1500
 Height = 800
 Window = pygame.display.set_mode((Width, Height))
 pygame.display.set_caption("Gravsim 0.0.1")
 
-Gravsim_cf.G = 10
+Gravsim_cf.G = 50
 Gravsim_cf.force_stable_orbits = True
+Gravsim_cf.separate_barycenters_for_calculations = False
+Gravsim_cf.render_barycenters = True
 
 Colors = {
     "light_grey" : (200, 200, 200),
@@ -27,42 +30,14 @@ Colors = {
 Scale = 2
 Framerate = 60
 view_offset = np.array([0.0, 0.0])
-rfactor = 5
-
-def orb_vel(parent_mass, orbital_radius):
-    return np.sqrt(Gravsim_cf.G * parent_mass / orbital_radius)
 
 def add_sattelite(parent, mass, rval, color, orbital_radius, r_or_d="radius"):
     objects.append(Gravsim_cf.gravobject(mass, rval, [parent.coordinates[0], parent.coordinates[1] - orbital_radius], [parent.velocity[0] + orb_vel(parent.mass, orbital_radius), parent.velocity[1]], color, r_or_d=r_or_d, parent=parent))
 
-objects = [Gravsim_cf.gravobject(14, 5.6, [0, 0], [0, 0], Colors["blue"], stabilized=False)]
+objects = []
+objects.append(Gravsim_cf.barycenter(objects, 8, 3.6, Colors["blue"], 5, 2.7, Colors["purple"], [0.0, 0.0], 100, [0.0, 0.0]))
 
-add_sattelite(objects[0], 10, 3.3, Colors["purple"], 100)
-add_sattelite(Gravsim_cf.barycenter(objects[0], objects[1]), 0.2, 0.3, Colors["light_blue"], 500)
-
-"""add_sattelite(objects[0], 51.56, 0.78, Colors["red"], 290.8, r_or_d="density")
-add_sattelite(objects[0], 13.30, 1.4, Colors["purple"], 1003.75, r_or_d="density")
-add_sattelite(objects[0], 0.43, 4.57, Colors["light_grey"], 2550.02, r_or_d="density")
-
-add_sattelite(objects[2], 0.023, 5.89, Colors["dark_grey"], 16.8, r_or_d="density")
-
-add_sattelite(objects[0], 1.02, 1.13, Colors["hot_grey"], 270.03)
-add_sattelite(objects[0], 1.16, 1.10, Colors["light_grey"], 370.06)
-add_sattelite(objects[0], 0.30, 0.79, Colors["light_grey"], 521.04)
-add_sattelite(objects[0], 0.77, 0.92, Colors["blue"], 684.71)
-add_sattelite(objects[0], 0.93, 1.05, Colors["light_blue"], 900.73)
-add_sattelite(objects[0], 1.15, 1.15, Colors["light_blue"], 1096.57)
-add_sattelite(objects[0], 0.33, 0.78, Colors["light_blue"], 1448.78)"""
-
-
-
-def gravloop(delta, framerate=60):
-    Gravsim_cf.gravinteract(objects)
-
-    Gravsim_cf.apply_acceleration(objects, delta, framerate=framerate)
-
-    for object in objects.__reversed__():
-        object.render(Window, Scale, view_offset)
+add_sattelite(objects[0], 0.03, 0.3, Colors["light_blue"], 1000)
 
 def main():
     global Scale
@@ -97,7 +72,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 3:
                 mouse_right_trigger = False
         
-        gravloop(delta, framerate=Framerate)
+        Gravsim_cf.gravloop(Window, Scale, view_offset, objects, delta, framerate=Framerate)
 
         if mouse_pressed[2] and mouse_right_trigger == True:
             view_offset += np.array([(offset[0] - mouse_pos[0]) / Scale, (offset[1] - mouse_pos[1]) / Scale])
