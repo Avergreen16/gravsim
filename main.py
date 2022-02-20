@@ -1,20 +1,18 @@
 import pygame
 import numpy as np
 
-import classes_functions as Gravsim_cf
-from classes_functions import orb_vel
+import classes_functions as Gravsim
 
 Width = 1500
 Height = 800
 Window = pygame.display.set_mode((Width, Height))
 pygame.display.set_caption("Gravsim 0.0.1")
 
-Gravsim_cf.G = 50
-Gravsim_cf.force_stable_orbits = True
-Gravsim_cf.separate_barycenters_for_calculations = False
-Gravsim_cf.render_barycenters = True
+Gravsim.force_stable_orbits = True
+Gravsim.separate_barycenters_for_calculations = False
+Gravsim.render_barycenters = True
 
-Colors = {
+Color = {
     "light_grey" : (200, 200, 200),
     "orange" : (255, 100, 0),
     "blue" : (25, 25, 255),
@@ -24,21 +22,25 @@ Colors = {
     "light_blue" : (125, 125, 200),
     "purple" : (175, 25, 100),
     "white" : (255, 255, 255),
-    "hot_grey" : (250, 180, 120)
+    "hot_grey" : (250, 180, 120),
+    "yellow" : (255, 255, 25),
+    "dull_yellow" : (150, 150, 25)
 }
 
-Scale = 2
+Scale = 1
 Framerate = 60
 view_offset = np.array([0.0, 0.0])
 
-def add_sattelite(parent, mass, rval, color, orbital_radius, r_or_d="radius"):
-    objects.append(Gravsim_cf.gravobject(mass, rval, [parent.coordinates[0], parent.coordinates[1] - orbital_radius], [parent.velocity[0] + orb_vel(parent.mass, orbital_radius), parent.velocity[1]], color, r_or_d=r_or_d, parent=parent))
+#Gravsim.gravobject(140000, 40, [0, 0], [0, 0], Color["yellow"], stabilized=True)
+Gravsim.barycenter(100000, 1.7, Color["orange"], 80000, 1.5, Color["red"], [0, 0], 1000, [0, 0], object1_r_or_d="density", object2_r_or_d="density")
 
-objects = []
-objects.append(Gravsim_cf.barycenter(objects, 8, 3.6, Colors["blue"], 5, 2.7, Colors["purple"], [0.0, 0.0], 100, [0.0, 0.0]))
+"""#Gravsim.add_satellite(Gravsim.objects[0], 13, 4, Color["dull_yellow"], 50000)
 
-add_sattelite(objects[0], 0.03, 0.3, Colors["light_blue"], 1000)
+Gravsim.add_satellite_barycenter(Gravsim.barycenters[0], 7, 3, Color["blue"], 6, 2.5, Color["dull_yellow"], 50000, 120)"""
+'''Gravsim.barycenter(8, 3.6, Color["blue"], 5, 2.7, Color["purple"], [0.0, 0.0], 100, [0.0, 0.0], stabilized=True)
 
+#Gravsim.add_satellite(Gravsim.objects[0], 0.03, 0.3, Color["light_blue"], 700)
+'''
 def main():
     global Scale
     global view_offset
@@ -72,14 +74,14 @@ def main():
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 3:
                 mouse_right_trigger = False
         
-        Gravsim_cf.gravloop(Window, Scale, view_offset, objects, delta, framerate=Framerate)
+        Gravsim.gravloop(Window, Scale, view_offset, delta, framerate=Framerate)
 
         if mouse_pressed[2] and mouse_right_trigger == True:
             view_offset += np.array([(offset[0] - mouse_pos[0]) / Scale, (offset[1] - mouse_pos[1]) / Scale])
             offset = np.array([mouse_pos[0], mouse_pos[1]])
         
-        #else:
-        #    view_offset = objects[3].coordinates.copy()
+        """else:
+            view_offset = Gravsim.barycenters[1].coordinates.copy()"""
 
         pygame.display.update()
         
