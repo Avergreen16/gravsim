@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 
 import classes_functions as Gravsim
+from classes_functions import au, ld, lm, jm, sm, objects, barycenters, gravobject, barycenter, add_satellite, add_satellite_barycenter
 
 Width = 1500
 Height = 800
@@ -11,6 +12,9 @@ pygame.display.set_caption("Gravsim 0.0.1")
 Gravsim.force_stable_orbits = True
 Gravsim.separate_barycenters_for_calculations = False
 Gravsim.render_barycenters = True
+Gravsim.default_r_or_d = "density"
+
+rng = np.random.default_rng()
 
 Color = {
     "light_grey" : (200, 200, 200),
@@ -24,23 +28,52 @@ Color = {
     "white" : (255, 255, 255),
     "hot_grey" : (250, 180, 120),
     "yellow" : (255, 255, 25),
-    "dull_yellow" : (150, 150, 25)
+    "dull_yellow" : (150, 150, 25),
+    "light_purple" : (210, 125, 200),
+    "cyan" : (25, 140, 175)
 }
 
-Scale = 1
+Scale = 0.1
 Framerate = 60
 view_offset = np.array([0.0, 0.0])
 
-#Gravsim.gravobject(140000, 40, [0, 0], [0, 0], Color["yellow"], stabilized=True)
-Gravsim.barycenter(100000, 1.7, Color["orange"], 80000, 1.5, Color["red"], [0, 0], 1000, [0, 0], object1_r_or_d="density", object2_r_or_d="density")
+gravobject(1000000, 2, [0, 0], [0, 0], Color["light_grey"])
+print(objects[0].radius)
 
-"""#Gravsim.add_satellite(Gravsim.objects[0], 13, 4, Color["dull_yellow"], 50000)
+'''#ravobject(140000, 40, [0, 0], [0, 0], Color["yellow"], fixed=True)
+gravobject(sm(2.3), 2.9, [0, 0], [0, 0], Color["light_blue"], fixed=True)
 
-Gravsim.add_satellite_barycenter(Gravsim.barycenters[0], 7, 3, Color["blue"], 6, 2.5, Color["dull_yellow"], 50000, 120)"""
-'''Gravsim.barycenter(8, 3.6, Color["blue"], 5, 2.7, Color["purple"], [0.0, 0.0], 100, [0.0, 0.0], stabilized=True)
+add_satellite_barycenter(objects[0], sm(0.43), 1.7, Color["orange"], sm(0.14), 1.5, Color["red"], au(100000), ld(31), eccentricity1=0.05)
+#barycenter(sm(0.43), 1.7, Color["orange"], sm(0.14), 1.5, Color["red"], [0, 0], ld(31), [0, 0], fixed=True, eccentricity=0.05, argument_of_periapsis=rng.random() * 360)'''
 
-#Gravsim.add_satellite(Gravsim.objects[0], 0.03, 0.3, Color["light_blue"], 700)
-'''
+'''add_satellite(barycenters[0], 0.13, 5.2, Color["light_grey"], au(0.34), eccentricity=0.01, argument_of_periapsis=rng.random() * 360) #0
+add_satellite(barycenters[0], 0.67, 3.9, Color["blue"], au(1.02), eccentricity=0.009, argument_of_periapsis=rng.random() * 360) #0
+add_satellite(barycenters[0], lm(0.2), 4.1, Color["light_blue"], au(1.52), eccentricity=0.03, argument_of_periapsis=rng.random() * 360) #0
+add_satellite(barycenters[0], lm(0.13), 2.8, Color["light_blue"], au(1.81), eccentricity=0.09, argument_of_periapsis=rng.random() * 360) #0
+add_satellite(barycenters[0], jm(0.73), 1.3, Color["dull_yellow"], au(2.82), eccentricity=0.005, argument_of_periapsis=rng.random() * 360) #4
+add_satellite(barycenters[0], 47, 1.5, Color["blue"], au(5.44), eccentricity=0.015, argument_of_periapsis=rng.random() * 360) #2
+add_satellite(barycenters[0], 23, 0.8, Color["purple"], au(8.03), eccentricity=0.023, argument_of_periapsis=rng.random() * 360) #5
+add_satellite(barycenters[0], lm(0.31), 2.1, Color["light_blue"], au(14.3), eccentricity=0.078, argument_of_periapsis=rng.random() * 360) #0
+add_satellite(barycenters[0], lm(0.21), 1.6, Color["light_purple"], au(17.87), eccentricity=0.04, argument_of_periapsis=rng.random() * 360) #1
+add_satellite(barycenters[0], lm(0.08), 1.8, Color["light_blue"], au(24.09), eccentricity=0.34, argument_of_periapsis=rng.random() * 360) #0'''
+
+'''add_satellite(objects[6], lm(0.24), 4.8, Color["light_grey"], ld(0.56), eccentricity=0.008, argument_of_periapsis=rng.random() * 360)
+add_satellite(objects[6], lm(0.34), 2.8, Color["light_blue"], ld(1.14), eccentricity=0.006, argument_of_periapsis=rng.random() * 360)
+add_satellite(objects[6], lm(0.09), 1.7, Color["light_blue"], ld(3.81), eccentricity=0.005, argument_of_periapsis=rng.random() * 360)
+add_satellite(objects[6], lm(3.2), 2.7, Color["cyan"], ld(6.16), eccentricity=0.012, argument_of_periapsis=rng.random() * 360)
+
+add_satellite(objects[7], lm(0.21), 1.8, Color["light_blue"], ld(0.32), eccentricity=0.007, argument_of_periapsis=rng.random() * 360)
+add_satellite(objects[7], lm(0.06), 1.8, Color["light_blue"], ld(1.4), eccentricity=0.003, argument_of_periapsis=rng.random() * 360)
+
+add_satellite(objects[8], lm(0.3), 2.2, Color["light_blue"], ld(0.45), eccentricity=0.008, argument_of_periapsis=rng.random() * 360)
+add_satellite(objects[8], lm(0.04), 1.6, Color["light_purple"], ld(1.27), eccentricity=0.007, argument_of_periapsis=rng.random() * 360)
+add_satellite(objects[8], lm(0.05), 1.4, Color["light_blue"], ld(1.57), eccentricity=0.007, argument_of_periapsis=rng.random() * 360)
+add_satellite(objects[8], lm(0.09), 1.7, Color["light_blue"], ld(2.57), eccentricity=0.004, argument_of_periapsis=rng.random() * 360)
+add_satellite(objects[8], lm(0.13), 1.8, Color["light_grey"], ld(3.61), eccentricity=0.012, argument_of_periapsis=rng.random() * 360)
+
+add_satellite(objects[10], lm(0.04), 1.4, Color["white"], ld(0.2), eccentricity=0.007, argument_of_periapsis=rng.random() * 360)'''
+
+
 def main():
     global Scale
     global view_offset
@@ -79,9 +112,6 @@ def main():
         if mouse_pressed[2] and mouse_right_trigger == True:
             view_offset += np.array([(offset[0] - mouse_pos[0]) / Scale, (offset[1] - mouse_pos[1]) / Scale])
             offset = np.array([mouse_pos[0], mouse_pos[1]])
-        
-        """else:
-            view_offset = Gravsim.barycenters[1].coordinates.copy()"""
 
         pygame.display.update()
         
