@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 
 import classes_functions as Gravsim
-from classes_functions import au, ld, lm, jm, sm, objects, barycenters, gravobject, barycenter, add_satellite, add_satellite_barycenter
+from classes_functions import objects, barycenters, gravobject, barycenter, add_satellite, add_satellite_barycenter
 
 Width = 1500
 Height = 800
@@ -30,15 +30,26 @@ Color = {
     "yellow" : (255, 255, 25),
     "dull_yellow" : (150, 150, 25),
     "light_purple" : (210, 125, 200),
-    "cyan" : (25, 140, 175)
+    "cyan" : (25, 140, 175),
+    "dull_orange" : (150, 60, 25),
+    "light_orange" : (215, 180, 100),
+    "pale_orange" : (215, 160, 80)
 }
 
 Scale = 0.1
 Framerate = 60
 view_offset = np.array([0.0, 0.0])
 
-gravobject(1000000, 2, [0, 0], [0, 0], Color["light_grey"])
-print(objects[0].radius)
+gravobject(1000000, 1.5, [0, 0], [0, 0], Color["yellow"])
+add_satellite(objects[0], 2, 5, Color["light_grey"], 10000)
+add_satellite(objects[0], 18, 5, Color["dull_yellow"], 35000)
+add_satellite(objects[0], 20, 5, Color["green"], 50000)
+add_satellite(objects[0], 6, 4, Color["dull_orange"], 75000)
+add_satellite(objects[3], 0.25, 3, Color["light_grey"], 500)
+add_satellite(objects[0], 6000, 1.4, Color["pale_orange"], 150000)
+add_satellite(objects[0], 2000, 0.6, Color["light_orange"], 300000)
+add_satellite(objects[0], 300, 1.6, Color["blue"], 550000)
+add_satellite(objects[0], 360, 1.6, Color["cyan"], 750000)
 
 '''#ravobject(140000, 40, [0, 0], [0, 0], Color["yellow"], fixed=True)
 gravobject(sm(2.3), 2.9, [0, 0], [0, 0], Color["light_blue"], fixed=True)

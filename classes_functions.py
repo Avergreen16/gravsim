@@ -1,10 +1,10 @@
 import pygame
 import numpy as np
 
-# get orbital velocity of barycenter, then add it to each object's velocity to avoid binary planets breaking up.
-# have binary systems' objects orbit the barycenter with a mass equation to determine the apparent mass to decrease instability of orbits
+# add a feature to assign a random starting position on the orbit given true anomaly
+# fix integer overflow with planet rendering at large distances and large view scale
 
-G = 0.01#6.675 * 10**-11
+G = 10#6.675 * 10**-11
 force_stable_orbits = False
 separate_barycenters_for_calculations = True
 render_barycenters = False
@@ -15,21 +15,6 @@ objects = []
 
 def orb_vel(parent_mass, orbital_radius):
     return np.sqrt((G * parent_mass) / orbital_radius)
-
-def au(value):
-    return value * 23481.066
-
-def ld(value):
-    return value * 60.336
-
-def lm(value):
-    return value * 0.0123
-
-def jm(value):
-    return value * 317.8
-
-def sm(value):
-    return value * 332950
 
 class container():
     pass
