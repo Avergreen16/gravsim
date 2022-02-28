@@ -1,3 +1,4 @@
+from ast import If
 from tkinter import Scale
 from PIL import Image
 import numpy as np
@@ -89,15 +90,26 @@ class noisefactory:
         for j in range(self.octaves):
             dot_products = []
             for i in range(4):
-                v_x = np.floor(x / (self.scale / 2**j)) + (i % 2)
-                v_y = np.floor(y / (self.scale / 2**j)) + np.floor(i / 2)
+                vp_x = np.floor(x / (self.scale / 2**j)) + (i % 2)
+                vp_y = np.floor(y / (self.scale / 2**j)) + np.floor(i / 2)
+                v_x = vp_x
+                v_y = vp_y
+                if self.torus:
+                    while v_x >= size[0] * 2**j:
+                        v_x -= size[0] * 2**j
+                    while v_y >= size[1] * 2**j:
+                        v_y -= size[1] * 2**j
+                    """while v_x > size * 2**j:
+                        v_x - size * 2**j
+                    while v_y > size * 2**j:
+                        v_y - size * 2**j"""
                 v_key = "{}x{}".format(v_x, v_y)
                 if v_key not in self.vectors:
                     v_angle = self.rng() * 2 * np.pi
                     self.vectors[v_key] = np.array([np.cos(v_angle), np.sin(v_angle)])
                 active_vector = self.vectors[v_key]
-                dv_x = x - v_x * (self.scale / 2**j)
-                dv_y = y - v_y * (self.scale / 2**j)
+                dv_x = x - vp_x * (self.scale / 2**j)
+                dv_y = y - vp_y * (self.scale / 2**j)
                 distance_vector = np.array([dv_x, dv_y])
                 dot_products.append(dot_product(distance_vector, active_vector))
             #i_x = np.floor(x % self.scale) / self.scale
@@ -127,6 +139,11 @@ class valuenoisefactory:
             for i in range(4):
                 v_x = np.floor(x / (self.scale / 2**j)) + (i % 2)
                 v_y = np.floor(y / (self.scale / 2**j)) + np.floor(i / 2)
+                if self.torus:
+                    while v_x >= size[0] * 2**j:
+                        v_x -= size[0] * 2**j
+                    while v_y >= size[1] * 2**j:
+                        v_y -= size[1] * 2**j
                 v_key = "{}x{}".format(v_x, v_y)
                 if v_key not in self.values:
                     v_value = (self.rng() - 0.5) * 2
@@ -141,13 +158,13 @@ size = [8, 8]
 scale = 32
 levels = 6
 # perlin noise works best with a persistance of 1, value noise works best with a persistance of 2 or 3
-factory = noisefactory(0.5623, scale, size, 4, 1)
+factory = valuenoisefactory(0.5623, scale, size, 4, 3)
 noise = np.zeros([size[0] * scale, size[1] * scale])
 for i in range(size[0] * scale):
     for j in range(size[1] * scale):
+        noise[j][i] = factory(i, j)
         """value = factory(i, j)
         noise[j][i] = np.floor(value / 255 * levels) / levels * 255"""
-        noise[j][i] = factory(i, j)
 
 img = Image.fromarray(noise)
 img.show()
