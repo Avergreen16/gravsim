@@ -1,0 +1,11 @@
+g++ -c src\*.cpp -std=c++14 -g -Wall -I include && g++ *.o -o bin\debug\main -L include\SDL2-w64\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && bin\debug\main
+
+g++ src_noise\*.cpp -g -Wall -I include -o bin\debug\noise -Linclude\FreeImage\Dist\x64 -lmingw32 -lgdi32 -lFreeImage && bin\debug\noise
+
+g++ src_noise\*.cpp -I include -o bin\debug\noise -Linclude\FreeImage\Dist\x64 -lmingw32 -lFreeImage
+
+bin\debug\noise
+
+cd OneDrive\desktop\"SDL game" && g++ src_noise\*.cpp -I include -o bin\debug\noise -Linclude\FreeImage\Dist\x64 -lmingw32 -lFreeImage && bin\debug\noise
+
+g++ src_noise\noise1.cpp -I include -O3 -o bin\debug\noise1 -Linclude\FreeImage\Dist\x64 -lmingw32 -lFreeImage && bin\debug\noise1
