@@ -1,0 +1,27 @@
+g++ -c src\*.cpp -std=c++17 -g -Wall -I include && g++ *.o -o bin\debug\main -L include\SDL2-w64\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && bin\debug\main
+
+g++ src_noise\*.cpp -g -Wall -I include -o bin\debug\noise -Linclude\FreeImage\Dist\x64 -lmingw32 -lgdi32 -lFreeImage && bin\debug\noise
+
+g++ src_noise\*.cpp -I include -o bin\debug\noise -Linclude\FreeImage\Dist\x64 -lmingw32 -lFreeImage
+
+bin\debug\noise
+
+cd OneDrive\desktop\"SDL game" && g++ src_noise\*.cpp -I include -O3 -o bin\debug\noise -Linclude\FreeImage\Dist\x64 -lmingw32 -lFreeImage && bin\debug\noise
+
+g++ src_noise\noise1.cpp -I include -O3 -o bin\debug\noise1 -Linclude\FreeImage\Dist\x64 -lmingw32 -lFreeImage && bin\debug\noise1
+
+seed of andromeda
+
+cd OneDrive\desktop\"SDL game" && g++ src_noise\triangle_raster\*.cpp -I include -O3 -o bin\debug\triangle_raster -Linclude\FreeImage\Dist\x64 -lmingw32 -lFreeImage && bin\debug\triangle_raster
+
+g++ -c src\*.cpp -std=c++14 -g -Wall -I include && g++ *.o -o bin\debug\main -L include\SDL2-w64\lib -L glew-2.2.0\lib\Release\x64 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lglu32 -lopengl32 && bin\debug\main
+
+g++ -c src\*.cpp src\*.c -std=c++14 -g -Wall -I include && g++ *.o -o bin\debug\main -L include\SDL2-w64\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && bin\debug\main
+
+-lGL
+
+g++ -c src\*.cpp -std=c++17 -g -Wall -I include && g++ *.o -o bin\debug\main -L include\SDL2-w64\lib -L include\glew-2.1.0\lib\Release\x64 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lopengl32 -lglew32 && bin\debug\main
+
+g++ -c src\planetgen\accretion.cpp && g++ accretion.o -o bin\debug\accretion && bin\debug\accretion
+
+g++ -c src\*.cpp -std=c++17 -g -Wall -I include -I include\SFML-2.5.1\include && g++ *.o -o bin\debug\main -L include\SFML-2.5.1\lib -lmingw32 -lsfml-main -lsfml-system -lsfml-graphics -lsfml-audio -lsfml-network -lsfml-window && bin\debug\main
